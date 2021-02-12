@@ -18,7 +18,17 @@ public class GatewayServiceApplication {
     }
 
 
-    DiscoveryClientRouteDefinitionLocator definitionLocator(ReactiveDiscoveryClient r, DiscoveryLocatorProperties p){
-        return new DiscoveryClientRouteDefinitionLocator(r,p);
+    //@Bean
+    RouteLocator gatewayRoutes(RouteLocatorBuilder builder){
+        return builder.routes()
+                .route("r1",r->r.path("/customers/**").uri("http://localhost:8081/") )
+                .route("r2",r->r.path("/products/**").uri("http://localhost:8082/") )
+                .build();
     }
+
+    @Bean
+    DiscoveryClientRouteDefinitionLocator dynamicRoutes(ReactiveDiscoveryClient rdc, DiscoveryLocatorProperties dlp) {
+        return new DiscoveryClientRouteDefinitionLocator(rdc, dlp);
+    }
+
 }
